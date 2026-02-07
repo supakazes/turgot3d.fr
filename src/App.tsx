@@ -3,6 +3,7 @@ import mapboxgl, { type LngLatBoundsLike } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./App.css";
 
+const DEBUG_LAYER_ID = "verniquet rasters";
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 function getInitialCamera() {
@@ -35,10 +36,20 @@ function getInitialCamera() {
 function App() {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstance = useRef<mapboxgl.Map | null>(null);
+  const [layerVisible, setLayerVisible] = useState(true);
 
   const [zoom, setZoom] = useState(0);
   const [center, setCenter] = useState<[number, number]>([0, 0]);
   const [bounds, setBounds] = useState<LngLatBoundsLike | null>(null);
+
+  const toggleLayer = () => {
+    const map = mapInstance.current;
+    if (!map || !map.getLayer(DEBUG_LAYER_ID)) return;
+
+    const next = !layerVisible;
+    map.setLayoutProperty(DEBUG_LAYER_ID, "visibility", next ? "visible" : "none");
+    setLayerVisible(next);
+  };
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -104,6 +115,13 @@ function App() {
           maxWidth: 360,
         }}
       >
+        <button
+          onClick={toggleLayer}
+          style={{ marginTop: 8, padding: "4px 8px", fontSize: 12, cursor: "pointer" }}
+        >
+          {" "}
+          {layerVisible ? "Hide" : "Show"} layer{" "}
+        </button>
         <div>
           <b>Permalink</b>:<div style={{ wordBreak: "break-all" }}>{window.location.href}</div>
         </div>
