@@ -3,6 +3,8 @@ import mapboxgl, { type LngLatBoundsLike } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./App.css";
 
+const DEBUG_LAYER_ID = "verniquet rasters";
+
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 function App() {
@@ -14,6 +16,16 @@ function App() {
   const [bounds, setBounds] = useState<LngLatBoundsLike | null>(null);
   const [bearing, setBearing] = useState(0);
   const [pitch, setPitch] = useState(0);
+  const [layerVisible, setLayerVisible] = useState(true);
+
+  const toggleLayer = () => {
+    const map = mapInstance.current;
+    if (!map || !map.getLayer(DEBUG_LAYER_ID)) return;
+
+    const next = !layerVisible;
+    map.setLayoutProperty(DEBUG_LAYER_ID, "visibility", next ? "visible" : "none");
+    setLayerVisible(next);
+  };
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -37,7 +49,16 @@ function App() {
       setPitch(Number(map.getPitch().toFixed(1)));
     };
 
-    map.on("load", updateState);
+    map.on("load", () => {
+      updateState();
+
+      console.log(map.getStyle().layers?.map((l) => l.id));
+
+      // ensure initial visibility state
+      if (map.getLayer(DEBUG_LAYER_ID)) {
+        map.setLayoutProperty(DEBUG_LAYER_ID, "visibility", layerVisible ? "visible" : "none");
+      }
+    });
     map.on("move", updateState);
 
     return () => map.remove();
@@ -63,6 +84,18 @@ function App() {
           maxWidth: 320,
         }}
       >
+        <button
+          onClick={toggleLayer}
+          style={{
+            marginTop: 8,
+            padding: "4px 8px",
+            fontSize: 12,
+            cursor: "pointer",
+          }}
+        >
+          {layerVisible ? "Hide" : "Show"} layer
+        </button>
+
         <div>
           <b>Zoom</b>: {zoom}
         </div>
