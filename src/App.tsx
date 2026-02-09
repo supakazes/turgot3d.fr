@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import mapboxgl, { type LngLatBoundsLike } from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./App.css";
 import { DebugPanel } from "./components/DebugPanel";
@@ -36,21 +36,7 @@ function getInitialCamera() {
 
 function App() {
   const mapRef = useRef<HTMLDivElement | null>(null);
-  const mapInstance = useRef<mapboxgl.Map | null>(null);
-  const [layerVisible, setLayerVisible] = useState(true);
-
-  const [zoom, setZoom] = useState(0);
-  const [center, setCenter] = useState<[number, number]>([0, 0]);
-  const [bounds, setBounds] = useState<LngLatBoundsLike | null>(null);
-
-  const toggleLayer = () => {
-    const map = mapInstance.current;
-    if (!map || !map.getLayer(DEBUG_LAYER_ID)) return;
-
-    const next = !layerVisible;
-    map.setLayoutProperty(DEBUG_LAYER_ID, "visibility", next ? "visible" : "none");
-    setLayerVisible(next);
-  };
+  const [mapInstance, setMapInstance] = useState<mapboxgl.Map | null>(null);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -64,14 +50,8 @@ function App() {
       zoom: initial.zoom,
     });
 
-    mapInstance.current = map;
+    setMapInstance(map);
     map.addControl(new mapboxgl.NavigationControl(), "top-right");
-
-    const updateDebugState = () => {
-      setZoom(Number(map.getZoom().toFixed(2)));
-      setCenter([Number(map.getCenter().lng.toFixed(5)), Number(map.getCenter().lat.toFixed(5))]);
-      setBounds(map.getBounds()?.toArray() ?? null);
-    };
 
     const updateUrl = () => {
       const c = map.getCenter();
@@ -86,12 +66,7 @@ function App() {
       window.history.replaceState(null, "", newUrl);
     };
 
-    map.on("load", () => {
-      updateDebugState();
-      updateUrl();
-    });
-
-    map.on("move", updateDebugState);
+    map.on("load", updateUrl);
     map.on("moveend", updateUrl);
 
     return () => map.remove();
@@ -100,13 +75,7 @@ function App() {
   return (
     <>
       <div ref={mapRef} style={{ width: "100vw", height: "100vh" }} />
-      <DebugPanel
-        layerVisible={layerVisible}
-        toggleLayer={toggleLayer}
-        zoom={zoom}
-        center={center}
-        bounds={bounds}
-      />
+      <DebugPanel map={mapInstance} layerId={DEBUG_LAYER_ID} />
     </>
   );
 }
