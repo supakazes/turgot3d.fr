@@ -95,6 +95,16 @@ export function DebugPanel({ map, layerId }: DebugPanelProps) {
         <b>Bounds</b>:
         <pre style={{ margin: "4px 0 0" }}>{JSON.stringify(debugState.bounds, null, 2)}</pre>
       </div> */}
+      <p>
+        follow the project on bluesky :<br />
+        <a
+          href="https://bsky.app/profile/turgot3d.bsky.social"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          turgot3d.bsky.social
+        </a>
+      </p>
     </div>
   );
 }
