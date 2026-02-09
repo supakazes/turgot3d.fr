@@ -79,24 +79,22 @@ export function DebugPanel({ map, layerId }: DebugPanelProps) {
 
   return (
     <div style={containerStyle}>
+      <h3>Turgot 3D (current tools)</h3>
       <button onClick={toggleLayer} style={buttonStyle}>
         {" "}
-        {layerVisible ? "Hide" : "Show"} layer{" "}
-      </button>
-      <div>
-        <b>Permalink</b>:<div style={{ wordBreak: "break-all" }}>{window.location.href}</div>
-      </div>
-
+        {layerVisible ? "Hide" : "Show"}
+      </button>{" "}
+      Atlas Verniquet (1775-1789)
       <div style={{ marginTop: 8 }}>
         <b>Zoom</b>: {debugState.zoom}
       </div>
       <div>
         <b>Center</b>: {debugState.center[0]}, {debugState.center[1]}
       </div>
-      <div>
+      {/* <div>
         <b>Bounds</b>:
         <pre style={{ margin: "4px 0 0" }}>{JSON.stringify(debugState.bounds, null, 2)}</pre>
-      </div>
+      </div> */}
     </div>
   );
 }
