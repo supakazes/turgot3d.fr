@@ -3,6 +3,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./App.css";
 import { DebugPanel } from "./components/DebugPanel";
+import GeolocateButton from "./components/GeolocateButton";
 
 const DEBUG_LAYER_ID = "verniquet rasters";
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -37,6 +38,22 @@ function getInitialCamera() {
 function App() {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const [mapInstance, setMapInstance] = useState<mapboxgl.Map | null>(null);
+  const [userMarker, setUserMarker] = useState<mapboxgl.Marker | null>(null);
+
+  // Handler to update map position and place marker
+  const handleGeolocate = (coords: { lat: number; lng: number }) => {
+    if (mapInstance) {
+      mapInstance.flyTo({ center: [coords.lng, coords.lat], zoom: 15 });
+      mapInstance.once("moveend", () => {
+        if (userMarker) {
+          userMarker.remove();
+        }
+        // Use the default Mapbox marker (pin)
+        const marker = new mapboxgl.Marker().setLngLat([coords.lng, coords.lat]).addTo(mapInstance);
+        setUserMarker(marker);
+      });
+    }
+  };
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -75,6 +92,9 @@ function App() {
   return (
     <>
       <div ref={mapRef} style={{ width: "100vw", height: "100vh" }} />
+      <div style={{ position: "absolute", top: 10, left: 10, zIndex: 10 }}>
+        <GeolocateButton onGeolocate={handleGeolocate} />
+      </div>
       <DebugPanel map={mapInstance} layerId={DEBUG_LAYER_ID} />
     </>
   );
