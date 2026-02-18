@@ -53,6 +53,17 @@ function App() {
     setMapInstance(map);
     map.addControl(new mapboxgl.NavigationControl(), "top-right");
 
+    // Add built-in geolocate control
+    map.addControl(
+      new mapboxgl.GeolocateControl({
+        positionOptions: { enableHighAccuracy: true },
+        trackUserLocation: false,
+        showUserHeading: true,
+        showAccuracyCircle: false,
+      }),
+      "top-right"
+    );
+
     const updateUrl = () => {
       const c = map.getCenter();
       const z = map.getZoom();
