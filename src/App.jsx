@@ -17,7 +17,7 @@ function App() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <img src="/plan-turgot.png" alt="Turgot map of Paris" width="100%" />
+        <img src="/plan-turgot.jpg" alt="Turgot map of Paris" width="100%" />
       </a>
 
       <h2>Verniquet.fr</h2>
