@@ -30,7 +30,7 @@ function App() {
         in the 18th century, on top of the actual city map.
       </p>
       <p>
-        This is a precious tool and you can explore it here:
+        This is a fun tool and you can explore it here:
         <br />
         <a
           href="https://www.verniquet.fr/?lng=2.36216&lat=48.86509&z=17.28"
