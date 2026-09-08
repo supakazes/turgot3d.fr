@@ -20,6 +20,8 @@ function App() {
         <img src="/plan-turgot.jpg" alt="Turgot map of Paris" width="100%" />
       </a>
 
+      <hr width="100%" />
+
       <h2>Verniquet.fr</h2>
       <p>
         The Turgot map's original representation is very detailed and accurate but sometimes
@@ -48,7 +50,17 @@ function App() {
         <img src="/verniquet.fr.webp" alt="Verniquet.fr" width="100%" />
       </a>
       <p>
-        Follow the project on Bluesky:
+        github:
+        <br />
+        <a
+          href="https://github.com/supakazes/turgot-threejs"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          https://github.com/supakazes/turgot-threejs
+        </a>
+        <br />
+        bluesky:
         <br />
         <a
           href="https://bsky.app/profile/turgot3d.bsky.social"
